@@ -1,0 +1,28 @@
+{
+  "config": {
+    "dim": 512,
+    "context": 8,
+    "layers": 2,
+    "steps": 400,
+    "batch": 32,
+    "lr": 0.0005,
+    "vocab_size": 1600,
+    "seed": 7,
+    "codebook_fingerprint": "cac87959aa1e5cb8"
+  },
+  "parameters": {
+    "model_parameters": 8430113,
+    "byte_head_parameters": 4202496,
+    "conventional_head_parameters": 67108864,
+    "head_reduction_factor": 15.968810916179336,
+    "vocab_size": 131072
+  },
+  "headless_decode": {
+    "attempted": 128,
+    "exact_word_recovered": 3,
+    "accuracy": 0.0234375,
+    "invalid_utf8": 0,
+    "invalid_fraction": 0.0
+  },
+  "runtime_seconds": 88.05906748771667
+}

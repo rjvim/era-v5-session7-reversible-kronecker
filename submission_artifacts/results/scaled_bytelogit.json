@@ -1,0 +1,53 @@
+[
+  {
+    "attempted": 512,
+    "exact": 5,
+    "accuracy": 0.009765625,
+    "invalid_utf8": 0,
+    "invalid_fraction": 0.0,
+    "total_steps": 500,
+    "config": {
+      "dim": 512,
+      "batch": 48,
+      "lr": 0.0005,
+      "vocab_size": 5000,
+      "seed": 7,
+      "context": 8,
+      "layers": 2
+    }
+  },
+  {
+    "attempted": 512,
+    "exact": 22,
+    "accuracy": 0.04296875,
+    "invalid_utf8": 0,
+    "invalid_fraction": 0.0,
+    "total_steps": 1500,
+    "config": {
+      "dim": 512,
+      "batch": 48,
+      "lr": 0.0005,
+      "vocab_size": 5000,
+      "seed": 7,
+      "context": 8,
+      "layers": 2
+    }
+  },
+  {
+    "attempted": 512,
+    "exact": 14,
+    "accuracy": 0.02734375,
+    "invalid_utf8": 0,
+    "invalid_fraction": 0.0,
+    "total_steps": 2500,
+    "config": {
+      "dim": 512,
+      "batch": 48,
+      "lr": 0.0005,
+      "vocab_size": 5000,
+      "seed": 7,
+      "context": 8,
+      "layers": 2
+    }
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "attempted": 512,
+    "exact": 7,
+    "accuracy": 0.013671875,
+    "invalid_utf8": 261,
+    "invalid_fraction": 0.509765625,
+    "total_steps": 1200,
+    "config": {
+      "dim": 512,
+      "batch": 48,
+      "lr": 0.0005,
+      "vocab_size": 5000,
+      "seed": 7,
+      "context": 8,
+      "layers": 2
+    }
+  },
+  {
+    "attempted": 512,
+    "exact": 8,
+    "accuracy": 0.015625,
+    "invalid_utf8": 257,
+    "invalid_fraction": 0.501953125,
+    "total_steps": 1500,
+    "config": {
+      "dim": 512,
+      "batch": 48,
+      "lr": 0.0005,
+      "vocab_size": 5000,
+      "seed": 7,
+      "context": 8,
+      "layers": 2
+    }
+  },
+  {
+    "attempted": 512,
+    "exact": 9,
+    "accuracy": 0.017578125,
+    "invalid_utf8": 264,
+    "invalid_fraction": 0.515625,
+    "total_steps": 2400,
+    "config": {
+      "dim": 512,
+      "batch": 48,
+      "lr": 0.0005,
+      "vocab_size": 5000,
+      "seed": 7,
+      "context": 8,
+      "layers": 2
+    }
+  }
+]

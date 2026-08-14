@@ -1,0 +1,40 @@
+{
+  "config": {
+    "dim": 8096,
+    "vocab_size": 3000,
+    "codebook_fingerprint": "cc6e368c44e4b820"
+  },
+  "vocab_byte_stats": {
+    "en": {
+      "words": 1500,
+      "mean_characters": 6.457333333333334,
+      "mean_utf8_bytes": 6.457333333333334,
+      "max_utf8_bytes": 15,
+      "bytes_per_character": 1.0
+    },
+    "hi": {
+      "words": 1500,
+      "mean_characters": 4.694,
+      "mean_utf8_bytes": 14.082,
+      "max_utf8_bytes": 30,
+      "bytes_per_character": 3.0
+    }
+  },
+  "exact_roundtrip": {
+    "en": {
+      "words": 1500,
+      "exact": 1500,
+      "accuracy": 1.0
+    },
+    "hi": {
+      "words": 1500,
+      "exact": 1500,
+      "accuracy": 1.0
+    }
+  },
+  "length_margin": {
+    "mean": 11.366809408190369,
+    "min": 4.539926381643108
+  },
+  "max_offdiagonal_position_0": 0.0474761538207531
+}

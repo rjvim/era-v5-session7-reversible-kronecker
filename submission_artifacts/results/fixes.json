@@ -1,0 +1,40 @@
+{
+  "baseline": {
+    "attempted": 128,
+    "exact": 0,
+    "accuracy": 0.0,
+    "invalid_utf8": 51,
+    "invalid_fraction": 0.3984375
+  },
+  "fix_a_projection": {
+    "attempted": 128,
+    "exact": 0,
+    "accuracy": 0.0,
+    "invalid_utf8": 51,
+    "invalid_fraction": 0.3984375
+  },
+  "fix_b_contrastive": {
+    "attempted": 128,
+    "exact": 0,
+    "accuracy": 0.0,
+    "invalid_utf8": 128,
+    "invalid_fraction": 1.0
+  },
+  "fix_b_plus_projection": {
+    "attempted": 128,
+    "exact": 0,
+    "accuracy": 0.0,
+    "invalid_utf8": 128,
+    "invalid_fraction": 1.0
+  },
+  "config": {
+    "dim": 512,
+    "steps": 250,
+    "batch": 32,
+    "context": 8,
+    "vocab_size": 1600,
+    "temperature": 0.05,
+    "seed": 7,
+    "codebook_fingerprint": "cac87959aa1e5cb8"
+  }
+}

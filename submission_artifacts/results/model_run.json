@@ -1,0 +1,55 @@
+{
+  "config": {
+    "dim": 512,
+    "context": 12,
+    "layers": 2,
+    "steps": 1200,
+    "batch": 32,
+    "lr": 0.0003,
+    "vocab_size": 3000,
+    "seed": 7,
+    "codebook_fingerprint": "cac87959aa1e5cb8"
+  },
+  "vocab_byte_stats": {
+    "en": {
+      "words": 1500,
+      "mean_characters": 6.457333333333334,
+      "mean_utf8_bytes": 6.457333333333334,
+      "max_utf8_bytes": 15,
+      "bytes_per_character": 1.0
+    },
+    "hi": {
+      "words": 1500,
+      "mean_characters": 4.694,
+      "mean_utf8_bytes": 14.082,
+      "max_utf8_bytes": 30,
+      "bytes_per_character": 3.0
+    }
+  },
+  "parameters": {
+    "model_parameters": 4212736,
+    "output_head_parameters_avoided": 1536000,
+    "conventional_total": 5748736,
+    "reduction_fraction": 0.26718916993231207,
+    "vocab_size": 3000
+  },
+  "final_loss": 0.5115924417972565,
+  "relative_error": {
+    "mean": 0.8359243869781494,
+    "median": 0.8506077527999878,
+    "p10": 0.6615136861801147,
+    "p90": 0.9881918430328369,
+    "min": 0.5430322885513306
+  },
+  "cosine_to_target": {
+    "mean": 0.4763602912425995,
+    "max": 0.8397118449211121
+  },
+  "headless_decode": {
+    "attempted": 400,
+    "exact_word_recovered": 2,
+    "accuracy": 0.005,
+    "invalid_utf8": 199
+  },
+  "runtime_seconds": 188.11383485794067
+}
