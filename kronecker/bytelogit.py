@@ -18,11 +18,26 @@ gets both properties the vector formulation cannot have at once:
 
   - **Uncertainty is representable.** Position 3 can hold a genuine
     distribution over p and b. Nothing is averaged into a third thing.
+    This is the property vector regression lacks and the one that
+    actually fixes the superposition failure.
 
-  - **Every output is on-manifold.** Any argmax or sample over byte
-    logits is a well-formed byte string by construction. Invalid UTF-8
-    becomes a detectable, rejectable event rather than the silent
-    default.
+  - **Outputs were valid in every run measured here -- but NOT by
+    construction.** An earlier version of this docstring claimed that
+    any argmax over byte logits is a well-formed byte string
+    automatically. That is wrong. UTF-8 is a grammar: a lead byte
+    constrains what may follow it, and independent per-position argmax
+    cannot enforce that, since position 2 does not know what position 1
+    chose. `E0 A4 41` and `C3 41` are both reachable by independent
+    argmax and both fail to decode.
+
+    The measured 0% invalid rate is empirical at this scale, plausibly
+    because a 5,000-word vocabulary gives sharply peaked per-slot
+    distributions. `constrained.py` implements the actual fix --
+    decoding position by position with each step masked by what came
+    before, which makes validity structural.
+
+    Note also that valid UTF-8 is not the same as a legal token: `qxzf`
+    decodes fine and is not a word.
 
 And the original prize survives: the head is d x 8192, constant in
 vocabulary size.
@@ -37,12 +52,15 @@ a 33rd "length" channel is predicted directly, so the model states how
 many bytes it means. That is strictly more information than the vector
 formulation carried.
 
-STATUS: this file is the proposal made concrete and runnable. It has NOT
-been validated at the time of writing -- the container it was developed
-in has 1 CPU and 3GB of RAM. `experiments/exp5_bytelogit.py` trains it
-and reports the same end-to-end metric as exp3/exp4 so the numbers are
-directly comparable. Whatever that produces is the result; nothing here
-should be read as a claim until it has been run.
+STATUS: validated. `experiments/exp5_bytelogit.py` and `exp6_scaled.py`
+train this and report the same end-to-end metrics as exp3/exp4, so the
+numbers are directly comparable: 0% invalid utf-8 at every checkpoint
+against ~51% for the vector head, under matched budgets.
+
+That 0% is measured, not guaranteed -- see the second bullet above.
+`experiments/exp7_constrained.py` reports both decoders side by side
+along with token-probability metrics, which show the model learning
+(28x over uniform) where exact-match reporting showed almost nothing.
 """
 from __future__ import annotations
 
