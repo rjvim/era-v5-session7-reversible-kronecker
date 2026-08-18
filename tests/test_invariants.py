@@ -20,6 +20,7 @@ from codebook import Codebook          # noqa: E402
 from forward import encode             # noqa: E402
 from inverse import decode, roundtrip  # noqa: E402
 from bytelogit import ByteLogitTransformer, decode_words  # noqa: E402
+from constrained import decode_constrained  # noqa: E402
 from model import HeadlessTransformer  # noqa: E402
 
 DIM = 1024
@@ -99,27 +100,45 @@ def test_projection_is_a_noop():
     assert decode(rebuilt, codebook).recovered_bytes == first.recovered_bytes
 
 
-def test_bytelogit_output_is_always_on_manifold():
-    """The core claim of section 6, asserted against an UNTRAINED model.
+def test_independent_argmax_does_NOT_guarantee_valid_utf8():
+    """Documents the limitation the earlier version of this file missed.
 
-    If validity were a property the model learns, this would fail at
-    random initialisation. It must hold by construction instead: any
-    argmax over byte logits is a well-formed byte string, so the only
-    way to produce invalid output is a multi-byte utf-8 sequence cut
-    short -- which the length head makes explicit rather than silent.
+    The original test here asserted the SHAPE of the byte-logit output
+    and concluded validity was structural. It was not testing the claim
+    it was named after, so it confirmed a false statement instead of
+    falsifying it. The claim -- that any independent per-position argmax
+    yields well-formed UTF-8 -- is wrong, because UTF-8 is a grammar: a
+    lead byte constrains what may follow, and independent argmaxes have
+    no channel to communicate that constraint between positions.
+
+    This test asserts the counterexamples directly, so the limitation is
+    encoded in the suite rather than left in prose.
     """
+    reachable_by_independent_argmax = [
+        bytes([0xE0, 0xA4, 0x41]),  # Devanagari lead, ASCII continuation
+        bytes([0xC3, 0x41]),        # 2-byte lead, ASCII continuation
+        bytes([0xA4, 0xA8]),        # continuations with no lead
+        bytes([0xE0, 0xA4]),        # 3-byte sequence cut short
+    ]
+    for candidate in reachable_by_independent_argmax:
+        try:
+            candidate.decode("utf-8")
+            raise AssertionError(
+                f"{list(candidate)} decoded, so it is not a counterexample")
+        except UnicodeDecodeError:
+            pass
+
+
+def test_bytelogit_output_shape_is_correct():
+    """What the old test actually checked, now named accurately."""
     import torch
 
     torch.manual_seed(0)
     model = ByteLogitTransformer(dim=256, context=8, layers=1, heads=8)
-    embeddings = torch.randn(32, 8, 256)
     with torch.no_grad():
-        byte_logits, length_logits = model(embeddings)
+        byte_logits, length_logits = model(torch.randn(32, 8, 256))
 
     assert byte_logits.shape == (32, 32, 256)
-    words = decode_words(byte_logits, length_logits)
-    assert len(words) == 32
-    # Every output must decode to a byte string of the stated length.
     lengths = length_logits.argmax(-1)
     for row in range(32):
         assert 0 <= int(lengths[row]) <= model.max_positions
@@ -132,6 +151,49 @@ def test_bytelogit_head_is_constant_in_vocab_size():
     large = model.parameter_report(vocab_size=1000000)
     assert small["byte_head_parameters"] == large["byte_head_parameters"]
     assert large["head_reduction_factor"] > small["head_reduction_factor"]
+
+
+def test_constrained_decoding_cannot_emit_invalid_utf8():
+    """The actual fix: validity as a property of the decoder.
+
+    Stress-tested against RANDOM logits rather than a trained model's,
+    because a trained model's logits are exactly the distribution that
+    hid this problem in the first place -- 0% invalid was measured on
+    sharply peaked outputs and mistaken for a guarantee. Random logits
+    reach the adversarial corners.
+    """
+    import torch
+
+    rng = np.random.default_rng(0)
+    count = 4000
+    byte_logits = torch.from_numpy(
+        rng.standard_normal((count, 32, 256)).astype("float32"))
+    length_logits = torch.from_numpy(
+        rng.standard_normal((count, 33)).astype("float32"))
+
+    for recovered in decode_constrained(byte_logits, length_logits):
+        recovered.decode("utf-8")  # raises if the decoder is wrong
+
+
+def test_constrained_decoding_handles_narrowed_lead_bytes():
+    """RFC 3629 narrows the first continuation for four leads.
+
+    A first version of constrained.py used 0x80-0xBF for every
+    continuation and emitted `E0 80 80`, which does not decode. These
+    four leads are the cases that catches.
+    """
+    import torch
+
+    for lead, illegal_continuation in ((0xE0, 0x80), (0xED, 0xA0),
+                                       (0xF0, 0x80), (0xF4, 0x90)):
+        byte_logits = torch.full((1, 32, 256), -10.0)
+        byte_logits[0, 0, lead] = 10.0
+        for position in range(1, 4):
+            byte_logits[0, position, illegal_continuation] = 10.0
+        length_logits = torch.full((1, 33), -10.0)
+        length_logits[0, 4] = 10.0
+
+        decode_constrained(byte_logits, length_logits)[0].decode("utf-8")
 
 
 if __name__ == "__main__":
