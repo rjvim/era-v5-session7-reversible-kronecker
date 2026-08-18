@@ -1,0 +1,36 @@
+{
+  "config": {
+    "dim": 512,
+    "steps": 700,
+    "batch": 48,
+    "vocab_size": 1600,
+    "seed": 7,
+    "eval_samples": 256
+  },
+  "decoding": {
+    "unconstrained": {
+      "exact": 0,
+      "accuracy": 0.0,
+      "invalid_utf8": 0,
+      "invalid_fraction": 0.0
+    },
+    "constrained": {
+      "exact": 0,
+      "accuracy": 0.0,
+      "invalid_utf8": 0,
+      "invalid_fraction": 0.0
+    }
+  },
+  "token_probability": {
+    "mean_prob_of_correct_token": 0.017689893927628937,
+    "uniform_baseline": 0.000625,
+    "lift_over_uniform": 28.3038302842063,
+    "median_rank_of_correct_token": 81.5,
+    "top1": 0.02734375,
+    "top5": 0.12890625,
+    "top10": 0.1640625,
+    "top100": 0.5390625,
+    "perplexity": 14891.507752495114
+  },
+  "runtime_seconds": 176.3562788963318
+}
